@@ -9,6 +9,11 @@ that uses [Obsidian Publish](https://obsidian.md/publish) - https://shivan.dev
 
 ![example](/example/example.png)
 
+## FAQ
+
+- Q: Why not just copy-paste?
+- A: ¯\_(ツ)_/¯
+
 ## Troubleshooting
 
 - **"Please configure both vault paths"**: Set up both source and target paths in settings
