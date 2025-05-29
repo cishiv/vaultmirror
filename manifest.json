@@ -1,0 +1,10 @@
+{
+	"id": "vault-mirror",
+	"name": "Vault Mirror",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Allows you to mirror files between two vaults",
+	"author": "Shivan M",
+	"authorUrl": "https://shivan.dev",
+	"isDesktopOnly": true
+}
