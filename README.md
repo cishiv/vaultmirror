@@ -1,3 +1,5 @@
+> Disclaimer: I built this for my own use. No promises it'll work well for you.
+> 
 # Vault Mirror Plugin
 
 A straightforward plugin for copying files between two vaults.
@@ -23,7 +25,3 @@ Built with TypeScript and the official Obsidian Plugin API.
 ```bash
 npm install && npm run dev
 ```
-
-## License
-
-MIT License
