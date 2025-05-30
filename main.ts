@@ -10,8 +10,6 @@ import {
 import * as path from "path";
 import * as fs from "fs";
 
-// Remember to rename these classes and interfaces!
-
 interface VaultMirrorSettings {
 	sourceVaultPath: string;
 	targetVaultPath: string;
@@ -28,7 +26,6 @@ export default class VaultMirrorPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon(
 			"copy",
 			"Vault Mirror",
@@ -37,10 +34,8 @@ export default class VaultMirrorPlugin extends Plugin {
 				this.openVaultMirror();
 			}
 		);
-		// Perform additional things with the ribbon
 		ribbonIconEl.addClass("vault-mirror-ribbon-class");
 
-		// This adds a simple command that can be triggered anywhere
 		this.addCommand({
 			id: "open-vault-mirror",
 			name: "Open Vault Mirror",
@@ -49,7 +44,6 @@ export default class VaultMirrorPlugin extends Plugin {
 			},
 		});
 
-		// This adds a settings tab so the user can configure vault paths
 		this.addSettingTab(new VaultMirrorSettingTab(this.app, this));
 	}
 
@@ -75,7 +69,6 @@ export default class VaultMirrorPlugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	// Helper method to get markdown files from a vault path
 	async getMarkdownFiles(vaultPath: string): Promise<string[]> {
 		try {
 			const files: string[] = [];
@@ -110,7 +103,6 @@ export default class VaultMirrorPlugin extends Plugin {
 		}
 	}
 
-	// Helper method to copy files between vaults
 	async copyFiles(
 		sourceFiles: string[],
 		fromVault: string,
@@ -120,13 +112,10 @@ export default class VaultMirrorPlugin extends Plugin {
 			try {
 				const sourcePath = path.join(fromVault, file);
 
-				// Extract just the filename (no directory structure)
 				const fileName = path.basename(file);
 				const targetPath = path.join(toVault, fileName);
 
-				// Check if file already exists in target root
 				if (fs.existsSync(targetPath)) {
-					// Generate a unique filename
 					const name = path.parse(fileName).name;
 					const ext = path.parse(fileName).ext;
 					let counter = 1;
@@ -138,7 +127,6 @@ export default class VaultMirrorPlugin extends Plugin {
 						counter++;
 					}
 
-					// Copy with unique name
 					fs.copyFileSync(sourcePath, uniqueTargetPath);
 					new Notice(
 						`Copied ${fileName} as ${path.basename(
@@ -146,7 +134,6 @@ export default class VaultMirrorPlugin extends Plugin {
 						)} (renamed to avoid conflict)`
 					);
 				} else {
-					// Copy with original name
 					fs.copyFileSync(sourcePath, targetPath);
 				}
 			} catch (error) {
@@ -174,26 +161,22 @@ class VaultMirrorModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 
-		// Set modal size
 		this.modalEl.style.width = "90vw";
 		this.modalEl.style.height = "80vh";
 		this.modalEl.style.maxWidth = "1200px";
 
 		contentEl.createEl("h2", { text: "Vault Mirror" });
 
-		// Show initial interface with paths and scan button
 		this.createInitialInterface();
 	}
 
 	createInitialInterface() {
 		const { contentEl } = this;
 
-		// Clear any existing content except title
 		const title = contentEl.querySelector("h2");
 		contentEl.empty();
 		if (title) contentEl.appendChild(title);
 
-		// Create info section
 		const infoSection = contentEl.createDiv({ cls: "vault-mirror-info" });
 
 		infoSection.createEl("h3", { text: "Vault Paths" });
@@ -212,7 +195,6 @@ class VaultMirrorModal extends Modal {
 			cls: "vault-path",
 		});
 
-		// Create scan button section
 		const actionSection = contentEl.createDiv({
 			cls: "vault-mirror-actions",
 		});
@@ -223,7 +205,6 @@ class VaultMirrorModal extends Modal {
 		});
 		scanBtn.onclick = () => this.scanVaults();
 
-		// Create status section
 		const statusSection = contentEl.createDiv({
 			cls: "vault-mirror-status",
 		});
@@ -236,7 +217,6 @@ class VaultMirrorModal extends Modal {
 	async scanVaults() {
 		const { contentEl } = this;
 
-		// Show loading state
 		const statusSection = contentEl.querySelector(".vault-mirror-status");
 		if (statusSection) {
 			statusSection.empty();
@@ -247,11 +227,9 @@ class VaultMirrorModal extends Modal {
 		}
 
 		try {
-			// Load files from both vaults
 			await this.loadFiles();
 			this.isScanned = true;
 
-			// Clear and create the file comparison interface
 			const title = contentEl.querySelector("h2");
 			contentEl.empty();
 			if (title) contentEl.appendChild(title);
@@ -288,12 +266,10 @@ class VaultMirrorModal extends Modal {
 	createInterface() {
 		const { contentEl } = this;
 
-		// Create main container
 		const mainContainer = contentEl.createDiv({
 			cls: "vault-mirror-container",
 		});
 
-		// Create source section
 		const sourceSection = mainContainer.createDiv({ cls: "vault-section" });
 		sourceSection.createEl("h3", {
 			text: `Source Vault (${this.sourceFiles.length} files)`,
@@ -320,7 +296,6 @@ class VaultMirrorModal extends Modal {
 			);
 		}
 
-		// Create middle section with buttons
 		const middleSection = mainContainer.createDiv({
 			cls: "middle-section",
 		});
@@ -343,7 +318,6 @@ class VaultMirrorModal extends Modal {
 		});
 		refreshBtn.onclick = () => this.refresh();
 
-		// Create target section
 		const targetSection = mainContainer.createDiv({ cls: "vault-section" });
 		targetSection.createEl("h3", {
 			text: `Target Vault (${this.targetFiles.length} files)`,
@@ -377,7 +351,6 @@ class VaultMirrorModal extends Modal {
 		selectedFiles: Set<string>,
 		side: "source" | "target"
 	) {
-		// Add select all checkbox
 		const selectAllContainer = container.createDiv({
 			cls: "select-all-container",
 		});
@@ -386,7 +359,6 @@ class VaultMirrorModal extends Modal {
 		});
 		selectAllContainer.createSpan({ text: "Select All" });
 
-		// Create file items container
 		const fileContainer = container.createDiv({ cls: "file-items" });
 
 		selectAllCheckbox.onchange = () => {
@@ -398,7 +370,6 @@ class VaultMirrorModal extends Modal {
 			this.updateFileList(fileContainer, files, selectedFiles, side);
 		};
 
-		// Initial population of file items
 		this.updateFileList(fileContainer, files, selectedFiles, side);
 	}
 
